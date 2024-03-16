@@ -1,4 +1,4 @@
-// Copyright (c) Arctium.
+﻿// Copyright (c) Arctium.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.CommandLine.Parsing;
@@ -22,6 +22,7 @@ static class Launcher
             GameVersion.Retail => ("_retail_", "Wow.exe", new[] { 9, 10 }, 37862),
             GameVersion.Classic => ("_classic_", "WowClassic.exe", new[] { 2, 3 }, 39926),
             GameVersion.ClassicEra => ("_classic_era_", "WowClassic.exe", new[] { 1 }, 40347),
+            GameVersion.Legion => ("", "Wow-64.exe", new[] { 7 }, 26972 ),
             _ => throw new NotImplementedException("Invalid game version specified."),
         };
 
@@ -31,8 +32,9 @@ static class Launcher
         Console.WriteLine();
         Console.ResetColor();
 
-        var currentFolder = AppDomain.CurrentDomain.BaseDirectory;
-        var gameFolder = $"{currentFolder}/{subFolder}";
+        //var currentFolder = AppDomain.CurrentDomain.BaseDirectory;
+        var currentFolder = System.IO.Directory.GetCurrentDirectory();
+        var gameFolder = subFolder.Length == 0 ? $"{currentFolder}" : $"{currentFolder}/{subFolder}";
 
         if (commandLineResult.HasOption(LaunchOptions.GameBinary))
             binaryName = commandLineResult.GetValueForOption(LaunchOptions.GameBinary);
@@ -161,6 +163,7 @@ static class Launcher
         return gameBinaryPath;
     }
 
+    // 启动游戏，然后修改exe的内存数据...
     public static bool LaunchGame(string appPath, string gameCommandLine, ParseResult commandLineResult)
     {
         // Build the version URL from the game binary build.
@@ -238,7 +241,8 @@ static class Launcher
 
                     // We need to cache this here since we are using our RSA modulus as auth seed.
                     var modulusOffset = memory.Data.FindPattern(Patterns.Common.SignatureModulus);
-                    var legacyCertMode = clientVersion is (1, >= 14, <= 3, _) or (3, 4, <= 1, _) or (9, _, _, _) or (10, <= 1, < 5, _);
+                    var legacyCertMode = clientVersion is (1, >= 14, <= 3, _) or (3, 4, <= 1, _) or (7, _, _, _)
+                        or (9, _, _, _) or (10, <= 1, < 5, _);
 
                     if (!commandLineResult.GetValueForOption(LaunchOptions.SkipConnectionPatching))
                     {
@@ -407,10 +411,11 @@ static class Launcher
         // Wait for client initialization.
         var initOffset = memory.Read(mbi.BaseAddress, (int)mbi.RegionSize)?.FindPattern(Patterns.Windows.Init) ?? 0;
 
+        // Legion在这个地方无法继续消息，一直无法找到init数据 ...
+
         while (initOffset == 0)
         {
             initOffset = memory.Read(mbi.BaseAddress, (int)mbi.RegionSize)?.FindPattern(Patterns.Windows.Init) ?? 0;
-
             Console.WriteLine("Waiting for client initialization...");
         }
 

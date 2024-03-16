@@ -10,7 +10,7 @@ static class LaunchOptions
 {
     public static bool IsDevModeAllowed { get; set; }
 
-    public static Option<GameVersion> Version = new("--version", () => GameVersion.Retail);
+    public static Option<GameVersion> Version = new("--version", () => /*GameVersion.Retail*/GameVersion.Legion);
     public static Option<string> GamePath = new("--path");
     public static Option<string> GameBinary = new("--binary");
     public static Option<bool> KeepCache = new("--keepcache", () => true);

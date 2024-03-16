@@ -6,6 +6,7 @@ enum GameVersion
 {
     Retail,
     Classic,
-    ClassicEra
+    ClassicEra,
+    Legion          // 添加军团再临
 }
 

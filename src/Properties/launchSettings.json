@@ -2,7 +2,7 @@
   "profiles": {
     "Arctium.WoW.Launcher": {
       "commandName": "Project",
-      "workingDirectory": "D:\\__git\\WoW-Launcher\\build\\Debug\\bin"
+      "workingDirectory": "D:\\735-full-en"
     }
   }
 }
