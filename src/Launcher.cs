@@ -87,6 +87,7 @@ static class Launcher
         }
 
         var configPath = $"{gameFolder}/WTF/{commandLineResult.GetValueForOption(LaunchOptions.GameConfig)}";
+        // 新的用法，不需前置定义结构，直接构造一个struct
         (string IPAddress, string HostName, int Port) portal = new();
 
         if (!File.Exists(configPath))
@@ -241,6 +242,7 @@ static class Launcher
 
                     // We need to cache this here since we are using our RSA modulus as auth seed.
                     var modulusOffset = memory.Data.FindPattern(Patterns.Common.SignatureModulus);
+                    // 检查证书的模式
                     var legacyCertMode = clientVersion is (1, >= 14, <= 3, _) or (3, 4, <= 1, _) or (7, _, _, _)
                         or (9, _, _, _) or (10, <= 1, < 5, _);
 

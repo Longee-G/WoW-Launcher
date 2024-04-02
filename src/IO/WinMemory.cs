@@ -149,6 +149,7 @@ class WinMemory
             Launcher.CancellationTokenSource.Cancel();
         }
 
+        // 判断内存中的数据是不是已经被修改成补丁数据了，如果没有就进行修改...
         while (Read(patchOffset, patch.Length)?.SequenceEqual(patch) == false)
             Write(patchOffset, patch);
 

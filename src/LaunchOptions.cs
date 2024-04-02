@@ -8,6 +8,7 @@ namespace Arctium.WoW.Launcher;
 
 static class LaunchOptions
 {
+    // 这个标记有什么作用？
     public static bool IsDevModeAllowed { get; set; }
 
     public static Option<GameVersion> Version = new("--version", () => /*GameVersion.Retail*/GameVersion.Legion);
